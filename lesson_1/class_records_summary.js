@@ -1,59 +1,3 @@
-/*
-Algorithm generateclassRecord Summary
-- takes an object scores as a parameter
-- declare a variable studentKeys and initialize it to calling Object.keys and passing
-scores as an argument
-- declare a variable studentGrades and initilaize this to an empty array
-- iterate through studentKeys, for each student in studentKeys
-  - pass scores[student][scores][exams] and scores[student][scores][exercises] to generateStudentGrade
-  - store the return value of this function call to studentGrade and append this to the studentGrades Array
-- declare a variable examScores
-
-
-Algorithm generateStudentGrade
-- define a function generateStudentGrade with two parameters, examScores and exerciseScores
-- pass examScores to a function generateStudentExamScore and store the return value in averageExamScoreWeighted
-
-  Algorithm generateStudentExamScore
-    - define a function generateStudentExamScore with one parameter scores
-    - declare a constant NUMBER_OF_EXAMS
-    - declare a constant EXAM_WEIGHT and initialize it to .65
-    - sum all of the elements in scores using reduce and then divide by NUMBER_OF_EXAMS and initialize this
-    to averageScore
-  - return averageScore * .65
-
-
-- pass exerciseScores to a function generateStudentExerciseScore and store the return value in totalExerciseScoreWeighted
-
-  Algorithm generateStudentExerciseScore
-    - define a function generateStudentExerciseScore with a parameter scores
-    - declare a constant EXERCISE_WEIGHT and initialize it to .35
-    - sum all of the elements in exerciseScores using reduce and then multiply by .35, return this number
-
-- Add averageExamScoreWeighted and totalExerciseScoreWeighted, round using Math.round, initialize this to
-studentNumberGrade
-- declare a variable studentLetterGrade and initialize this to the return value of passing studentNumberGrade to
-generateLetterGrade
-
-  Algorithm generateLetterGrade
-  - define a function generateLetterGrade with one parameter grade
-  - start an if..else statement
-  - if grade is less than or equal to 100 and greter than or equal to 93, return 'A'
-  - if grade is less than or equal to 92 and greater than or equal to 85, return 'B'
-  - if grade is less than or equal to 84 and greater than or equal to 77, return 'C'
-  - if grade is less than or equal to 76 and greater than or equal to 69, return 'D'
-  - if grade is less than or equal to 68 and greater than or equal to 60, return 'E'
-  - if grade is less than or equal to 59 and greater than or equal to 0, return 'F'
-
-- return from generateStudentgrade the string studentNumberGrade + ' ' + `($(studentLetterGrade))`
-
-
-
-
-
-*/
-
-
 let studentScores = {
   student1: {
     id: 123456789,
@@ -97,7 +41,7 @@ function generateAvgExamScore(scoresList) {
 
   let sum = scoresList.reduce((total, currentNum) => total + currentNum);
 
-  return sum / 4;
+  return sum / NUMBER_OF_EXAMS;
 }
 
 function generateLetterGrade(numberGrade) {
@@ -132,8 +76,7 @@ function generateStudentGrade(examScores, exerciseScores) {
 
 }
 
-function generateClassRecordSummary(scoresObj) {
-  let studentKeys = Object.keys(scoresObj);
+function generateStudentGradesRecord(scoresObj, studentKeys) {
   let studentGradesArray = [];
 
   studentKeys.forEach(student => {
@@ -143,8 +86,40 @@ function generateClassRecordSummary(scoresObj) {
     studentGradesArray.push(studentGrade);
   });
 
+  return studentGradesArray;
+}
+
+function generateExamStats(scoresObj, studentKeys) {
+  const NUMBER_OF_STUDENTS = 5;
+  let examAllGrades = [[], [], [], []];
+
+  studentKeys.forEach(student => {
+    let examScoresList = scoresObj[student]['scores']['exams'];
+    examAllGrades[0].push(examScoresList[0]);
+    examAllGrades[1].push(examScoresList[1]);
+    examAllGrades[2].push(examScoresList[2]);
+    examAllGrades[3].push(examScoresList[3]);
+  });
+
+  let examStats = []
+
+  examAllGrades.forEach(examsSubArray => {
+    let examAvg = (examsSubArray.reduce((total, exam) => total + exam)) /
+      NUMBER_OF_STUDENTS;
+    let examMin = Math.min(...examsSubArray);
+    let examMax = Math.max(...examsSubArray);
+    examStats.push({ average: examAvg, minimum: examMin, maximum: examMax });
+  });
+
+  return examStats;
+}
+
+function generateClassRecordSummary(scoresObj) {
+  let keys = Object.keys(scoresObj);
+
   return {
-    studentGrades: studentGradesArray,
+    studentGrades: generateStudentGradesRecord(scoresObj, keys),
+    exams: generateExamStats(scoresObj, keys),
   };
 }
 
