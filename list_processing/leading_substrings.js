@@ -1,3 +1,13 @@
+function leadingSubstrings(string) {
+  let substrings = [];
+  for (let endingIndx = 1; endingIndx <= string.length; endingIndx += 1) {
+    substrings.push(string.slice(0, endingIndx));
+  }
+
+  return substrings;
+}
+
+
 // function leadingSubstrings(string) {
 //   let substrings = [];
 
@@ -15,16 +25,16 @@
 //   });
 // }
 
-function leadingSubstrings(string) {
-  let substrings = [];
+// function leadingSubstrings(string) {
+//   let substrings = [];
 
-  string.split('').reduce(((accumulator, currentString) => {
-    substrings.push(accumulator + currentString);
-    return accumulator + currentString;
-  }), '');
+//   string.split('').reduce(((accumulator, currentString) => {
+//     substrings.push(accumulator + currentString);
+//     return accumulator + currentString;
+//   }), '');
 
-  return substrings;
-}
+//   return substrings;
+// }
 
 console.log(leadingSubstrings('abc'));      // ["a", "ab", "abc"]
 console.log(leadingSubstrings('a'));        // ["a"]
