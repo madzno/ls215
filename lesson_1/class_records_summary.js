@@ -1,3 +1,5 @@
+"use strict";
+
 let studentScores = {
   student1: {
     id: 123456789,
@@ -65,10 +67,12 @@ function generateStudentGrade(examScores, exerciseScores) {
   const EXERCISE_WEIGHT = .35;
 
   let averageExamScore = generateAvgExamScore(examScores);
-  let totalExerciseScore = exerciseScores.reduce((total, score) => total + score);
+  let totalExerciseScore = exerciseScores.reduce((total, score) => {
+    return total + score;
+  });
 
   let studentNumberGrade = Math.round((averageExamScore * EXAM_WEIGHT) +
-    (totalExerciseScore * EXERCISE_WEIGHT))
+    (totalExerciseScore * EXERCISE_WEIGHT));
 
   let studentLetterGrade = generateLetterGrade(studentNumberGrade);
 
@@ -95,13 +99,12 @@ function generateExamStats(scoresObj, studentKeys) {
 
   studentKeys.forEach(student => {
     let examScoresList = scoresObj[student]['scores']['exams'];
-    examAllGrades[0].push(examScoresList[0]);
-    examAllGrades[1].push(examScoresList[1]);
-    examAllGrades[2].push(examScoresList[2]);
-    examAllGrades[3].push(examScoresList[3]);
+    examScoresList.forEach((_, index, array) => {
+      examAllGrades[index].push(array[index]);
+    });
   });
 
-  let examStats = []
+  let examStats = [];
 
   examAllGrades.forEach(examsSubArray => {
     let examAvg = (examsSubArray.reduce((total, exam) => total + exam)) /
